@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sbc.sbceventpdfextractor.view;
+package com.pdf2ojs.view;
 
-import com.sbc.sbceventpdfextractor.model.ArticleMeta;
-import com.sbc.sbceventpdfextractor.model.ExportOjs;
-import com.sbc.sbceventpdfextractor.model.ExtractPdf;
+import com.pdf2ojs.model.ArticleMeta;
+import com.pdf2ojs.model.ExportOjs;
+import com.pdf2ojs.model.ExtractPdf;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;

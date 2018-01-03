@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sbc.sbceventpdfextractor.main;
+package com.pdf2ojs.main;
 
-import com.sbc.sbceventpdfextractor.view.ExtractorView;
+import com.pdf2ojs.view.ExtractorView;
 
 /**
  *

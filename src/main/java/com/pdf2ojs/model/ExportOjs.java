@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sbc.sbceventpdfextractor.model;
+package com.pdf2ojs.model;
 
-import com.sbc.sbceventpdfextractor.main.Main;
+import com.pdf2ojs.main.Main;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,7 +16,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import org.apache.commons.codec.binary.Base64;
 import java.util.List;
-import com.sbc.sbceventpdfextractor.model.ArticleMeta.ContributorMeta;
+import com.pdf2ojs.model.ArticleMeta.ContributorMeta;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;

@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sbc.sbceventpdfextractor.view;
+package com.pdf2ojs.view;
 
-import com.sbc.sbceventpdfextractor.model.ArticleMeta.ContributorMeta;
-import com.sbc.sbceventpdfextractor.model.ArticleMeta;
+import com.pdf2ojs.model.ArticleMeta.ContributorMeta;
+import com.pdf2ojs.model.ArticleMeta;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.util.ArrayList;

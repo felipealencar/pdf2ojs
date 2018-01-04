@@ -49,6 +49,7 @@ java -jar pdf2ojs-1.0-SNAPSHOT-jar-with-dependencies.jar
 * [Maven](https://maven.apache.org/) - Dependency Managemen
 * [CERMINE](http://cermine.ceon.pl/index.html) - Content ExtRactor and MINEr
 
+## Authors
 
 * **Gustavo Araújo** - *Initial work*
   - [PDF2OJS](https://github.com/gustavo978)

@@ -27,47 +27,45 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jScrollPane1" pref="940" max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" groupAlignment="2" attributes="0">
-                                  <Component id="author9Label" alignment="2" min="-2" max="-2" attributes="0"/>
-                                  <Component id="author8Label" alignment="2" min="-2" max="-2" attributes="0"/>
-                                  <Component id="author7Label" alignment="2" min="-2" max="-2" attributes="0"/>
-                                  <Component id="author6Label" alignment="2" min="-2" max="-2" attributes="0"/>
-                                  <Component id="author5Label" alignment="2" min="-2" max="-2" attributes="0"/>
-                                  <Component id="autho4Label" alignment="2" min="-2" max="-2" attributes="0"/>
-                                  <Component id="author4Label" alignment="2" min="-2" max="-2" attributes="0"/>
-                                  <Component id="author2Label" alignment="2" min="-2" max="-2" attributes="0"/>
-                                  <Component id="author1Label" alignment="2" min="-2" max="-2" attributes="0"/>
-                                  <Component id="TitleLabel" alignment="2" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="author10Label" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="author9Label" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="author8Label" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="author7Label" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="author6Label" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="author5Label" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="autho4Label" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="author4Label" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="author2Label" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="author1Label" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="TitleLabel" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="author1TextField" alignment="0" pref="858" max="32767" attributes="0"/>
-                              <Component id="author2TextField" alignment="0" pref="858" max="32767" attributes="0"/>
-                              <Component id="author3TextField" alignment="0" pref="858" max="32767" attributes="0"/>
-                              <Component id="author4TextField" alignment="0" pref="858" max="32767" attributes="0"/>
-                              <Component id="author5TextField" alignment="0" pref="858" max="32767" attributes="0"/>
-                              <Component id="author6TextField" alignment="0" pref="858" max="32767" attributes="0"/>
-                              <Component id="author7TextField" alignment="0" pref="858" max="32767" attributes="0"/>
-                              <Component id="author8TextField" alignment="0" pref="858" max="32767" attributes="0"/>
-                              <Component id="author9TextField" alignment="0" pref="858" max="32767" attributes="0"/>
-                              <Component id="author10TextField" alignment="0" pref="858" max="32767" attributes="0"/>
-                              <Component id="titleTextField" alignment="0" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="author10Label" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" attributes="0">
-                          <Component id="backButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="saveButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="nextButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="fileLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="author1TextField" alignment="0" pref="858" max="32767" attributes="0"/>
+                          <Component id="author2TextField" alignment="0" pref="858" max="32767" attributes="0"/>
+                          <Component id="author3TextField" alignment="0" pref="858" max="32767" attributes="0"/>
+                          <Component id="author4TextField" alignment="0" pref="858" max="32767" attributes="0"/>
+                          <Component id="author5TextField" alignment="0" pref="858" max="32767" attributes="0"/>
+                          <Component id="author6TextField" alignment="0" pref="858" max="32767" attributes="0"/>
+                          <Component id="author7TextField" alignment="0" pref="858" max="32767" attributes="0"/>
+                          <Component id="author8TextField" alignment="0" pref="858" max="32767" attributes="0"/>
+                          <Component id="author9TextField" alignment="0" pref="858" max="32767" attributes="0"/>
+                          <Component id="author10TextField" alignment="0" pref="858" max="32767" attributes="0"/>
+                          <Component id="titleTextField" alignment="0" max="32767" attributes="0"/>
                       </Group>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="backButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="saveButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="nextButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="fileLabel" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>

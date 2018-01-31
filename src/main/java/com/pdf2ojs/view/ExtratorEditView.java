@@ -30,7 +30,6 @@ public class ExtratorEditView extends javax.swing.JFrame {
 
     private List<ArticleMeta> metapapers = new ArrayList<ArticleMeta>();
     private List<JTextField> authorNames = new ArrayList<JTextField>();
-    private List<ContributorMeta> authors = new ArrayList<ContributorMeta>();
     private int index = 0;
     private int max = 0;
     private ExtractorView parent;
@@ -96,35 +95,23 @@ public class ExtratorEditView extends javax.swing.JFrame {
     }
     
     private void saveFields(int index) {
-        authors = metapapers.get(index).getAuthors();
+        List<ContributorMeta> authors = new ArrayList<ContributorMeta>();
         int authorIndex = 0;
         metapapers.get(index).setTitle(titleTextField.getText());
         metapapers.get(index).setAbstractText(abstractTextArea.getText());
 
         for (JTextField authorName : authorNames) {
             if (!authorName.getText().isEmpty()) {
-                authors.get(authorIndex).setName(authorName.getText());
-                authorIndex++;
+                ContributorMeta cm = new ContributorMeta();
+                cm.setName(authorName.getText());
+                authors.add(cm);
+                
+                System.out.println("Paper: " + metapapers.get(index).getTitle());
+                System.out.println("Saving authors:\n");
+                System.out.println("- " + cm.getName());
             }
         }
-        
-        List<ContributorMeta> authorsRemove = new ArrayList<ContributorMeta>();
-        for (int i = 0; i < authors.size(); i++) {
-            System.out.println("i: " + i + " size: " + authors.size());
-            if (authorNames.get(i).getText().isEmpty()){
-                    if (!authors.get(i).getName().isEmpty()) {
-                        //System.out.println("Remove: " + authors.get(i).getName());
-                        authorsRemove.add(authors.get(i));
-                    }
-            }
-        }
-        
-        for (ContributorMeta a : authorsRemove){
-            System.out.println("Remove: " + a.getName());
-            authors.remove(a);
-        }
-        
-        
+
         metapapers.get(index).setAuthors(authors);
     }
     

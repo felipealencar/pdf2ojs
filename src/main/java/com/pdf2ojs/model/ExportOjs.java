@@ -224,14 +224,12 @@ public class ExportOjs {
         strIssue = strIssue.replace(OJS_ISSUE_DATE_LAST_MODIFIED, this.issueDate);
         strIssue = strIssue.replace(OJS_ISSUE_YEAR, this.issueYear);
 
-        //System.out.println("---------");
-        //System.out.println(strIssue);
-        //System.out.println("---------");
         resultXml += strIssue + OJS_XML_ISSUE_SECTIONS + OJS_XML_ISSUE_ARTICLES;
         writer.write(resultXml);
         resultXml = "";
         
         int articleId = this.getArticleId();
+        int nUnknownAuthor = 0;
         for (ArticleMeta am : this.metaPapers){
             String strArticle = OJS_XML_ISSUE_ARTICLE;
             String strSubmission = OJS_XML_ISSUE_SUBMISSION;
@@ -246,11 +244,7 @@ public class ExportOjs {
             strArticle = strArticle.replace(OJS_ARTICLE_DATE_PUBLISHED, this.issueDate);
             strArticle = strArticle.replace(OJS_ARTICLE_TITLE, am.getTitle());
             strArticle = strArticle.replace(OJS_ARTICLE_ABSTRACT, am.getAbstractText());
-    
-            //System.out.println("---------");
-            //System.out.println(strArticle);
-            //System.out.println("---------");
-            
+               
             strSubmission = strSubmission.replace(OJS_FILE_NAME, "article" + am.getPdf().getName());
             strSubmission = strSubmission.replace(OJS_REV_NUMBER, String.valueOf(articleId));
             strSubmission = strSubmission.replace(OJS_DATE_UPLOADE, this.issueDate);
@@ -263,9 +257,15 @@ public class ExportOjs {
             strGalley = strGalley.replace(OJS_ARTICLE_GALLEY_REVISION, String.valueOf(articleId));
             strGalley = strGalley.replace(OJS_ARTICLE_REF, String.valueOf(articleId));
 
-            //System.out.println("---------");
-            //System.out.println(strGalley);
-            //System.out.println("---------");
+            if (am.getAuthors().size() < 1) {
+                ContributorMeta unknownAuthor = new ContributorMeta();
+                unknownAuthor.setName("Unknown Author");
+                am.getAuthors().add(unknownAuthor);
+                
+                System.out.println("Paper: " + am.getTitle());
+                System.out.println("Unknown Author");
+                nUnknownAuthor++;
+            }
             
             for (ContributorMeta author : am.getAuthors()) {
                 if (author.getName().length() > 40) {
@@ -281,25 +281,16 @@ public class ExportOjs {
                 strAuthor = strAuthor.replace(OJS_LAST_NAME, this.getAuthorName(author));
                 strAuthor = strAuthor.replace(OJS_EMAIL, "noemail@domain.com"/*this.getAuthorEmail(author)*/);
                 strAuthor = strAuthor.replace(OJS_PRIMARY_CONTACT, String.valueOf(firstAuthor));
-                
-                //System.out.println("---------");
-                //System.out.println(strAuthor);
-                //System.out.println("---------"); 
-                
+                               
                 if (firstAuthor) {
                     strSubmission = strSubmission.replace(OJS_AUTHOR, this.getAuthorName(author));
                     strSubmission = strSubmission.replace(OJS_UPLOADER, "ojs_sbc");
-                    /*System.out.println("---------");
-                    System.out.println(strSubmission);
-                    System.out.println("---------");*/
+
                     firstAuthor = false;
                 }
                 strAuthors += strAuthor;
             }
             
-            //System.out.println("---------");
-            //System.out.println(strAuthors);
-            //System.out.println("---------");
             strAuthors = OJS_XML_ISSUE_AUTHORS + strAuthors + OJS_XML_ISSUE_END_AUTHORS;
             resultXml +=  strArticle + strAuthors + strSubmission + strGalley + OJS_XML_ISSUE_END_ARTICLE;
             writer.write(resultXml);
@@ -309,6 +300,8 @@ public class ExportOjs {
         this.saveArticleId(articleId);
         writer.write(resultXml);
         writer.close();
+        
+        System.out.println("Finished xml process: " + nUnknownAuthor + " authors unknown");
     }
 
 }

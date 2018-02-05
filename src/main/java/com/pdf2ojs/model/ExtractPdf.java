@@ -117,11 +117,8 @@ public class ExtractPdf {
         System.out.println("Size index: " + index.size());
 
         for (ArticleMeta.ContributorMeta i : index){
-            System.out.println("index: " + i);
             articleMeta.getAuthors().remove(i);
         }
-        
-        
 
         return articleMeta;
     }

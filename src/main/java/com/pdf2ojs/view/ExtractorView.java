@@ -93,6 +93,7 @@ public class ExtractorView extends javax.swing.JFrame {
     }
     
     private void extractPapers(){
+        metapapers = new ArrayList<ArticleMeta>();
         int progress = 0;
         String filename = "";
         try {

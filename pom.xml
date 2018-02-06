@@ -64,7 +64,7 @@
             </descriptorRefs>
             <archive>
                 <manifest>
-                    <mainClass>com.sbc.sbceventpdfextractor.main.Main</mainClass>
+                    <mainClass>com.pdf2ojs.main.Main</mainClass>
                 </manifest>
             </archive>
         </configuration>

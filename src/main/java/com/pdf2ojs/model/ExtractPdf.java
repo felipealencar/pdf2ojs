@@ -24,10 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.util.PDFText2HTML;
-import org.apache.pdfbox.util.PDFTextStripper;
-import org.apache.pdfbox.util.PDFTextStripperByArea;
 import org.jdom.Element;
 import org.jdom.Document;
 import pl.edu.icm.cermine.ContentExtractor;
@@ -84,7 +80,7 @@ public class ExtractPdf {
             resumo = split[1];
         }
         
-        System.out.println(resumo);
+        System.out.println(resumo);        
         return resumo;
     }
     
@@ -113,8 +109,6 @@ public class ExtractPdf {
                 index.add(author);
             }
         }
-        
-        System.out.println("Size index: " + index.size());
 
         for (ArticleMeta.ContributorMeta i : index){
             articleMeta.getAuthors().remove(i);

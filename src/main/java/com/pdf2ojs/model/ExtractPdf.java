@@ -17,6 +17,7 @@
  */
 package com.pdf2ojs.model;
 
+import com.pdf2ojs.model.ArticleMeta.ContributorMeta;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -68,6 +69,7 @@ public class ExtractPdf {
         result = result.replaceAll("ã o ", "ão ");
         result = result.replaceAll(" á", "á");
         result = result.replace(" ú", "ú");
+        result = result.replace("&", " ");
         
         return result;
     }
@@ -101,6 +103,14 @@ public class ExtractPdf {
         articleMeta.setAbstractText(getSbcAbstract(articleMeta.getAbstractText()));
         articleMeta.setAbstractText(replaceString(articleMeta.getAbstractText()));
         articleMeta.setTitle(replaceString(articleMeta.getTitle()));
+        
+        if (articleMeta.getAuthors().size() > 10) {
+            List<ContributorMeta> cm = new ArrayList<ContributorMeta>();
+            ContributorMeta a = new ContributorMeta();
+            a.setName("Unknown Author");
+            cm.add(a);
+            articleMeta.setAuthors(cm);
+        }
         
         for (ArticleMeta.ContributorMeta author : articleMeta.getAuthors()) {
             author.setName(replaceString(author.getName()));

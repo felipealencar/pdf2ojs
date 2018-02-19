@@ -219,6 +219,8 @@ public class ExportOjs {
         
         String strIssue;
         strIssue = OJS_XML_ISSUE_IDENTIFICATION;
+        
+        
         strIssue = strIssue.replace(OJS_ISSUE_TITLE, this.issueTitle);
         strIssue = strIssue.replace(OJS_ISSUE_DATE_PUBLISHED, this.issueDate);
         strIssue = strIssue.replace(OJS_ISSUE_DATE_LAST_MODIFIED, this.issueDate);
@@ -239,6 +241,10 @@ public class ExportOjs {
             articleId++;
             boolean firstAuthor = true;
 
+            if ((!am.getTitle().isEmpty()) || (am.getTitle().equals(""))) {
+                continue;
+            }
+            
             strArticle = strArticle.replace(OJS_ARTICLE_ID, String.valueOf(articleId));
             strArticle = strArticle.replace(OJS_ARTICLE_DATE_SUBMITTED, this.issueDate);
             strArticle = strArticle.replace(OJS_ARTICLE_DATE_PUBLISHED, this.issueDate);

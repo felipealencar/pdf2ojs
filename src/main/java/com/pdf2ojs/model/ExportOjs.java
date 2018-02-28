@@ -241,7 +241,7 @@ public class ExportOjs {
             articleId++;
             boolean firstAuthor = true;
 
-            if ((!am.getTitle().isEmpty()) || (am.getTitle().equals(""))) {
+            if ((am.getTitle().isEmpty()) || (am.getTitle().equals(""))) {
                 continue;
             }
             

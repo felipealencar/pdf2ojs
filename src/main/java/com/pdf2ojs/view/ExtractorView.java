@@ -96,26 +96,27 @@ public class ExtractorView extends javax.swing.JFrame {
         metapapers = new ArrayList<ArticleMeta>();
         int progress = 0;
         String filename = "";
-        try {
-            for (File paper : papers) {
+        for (File paper : papers) {
+            try {
+            
                 filename = paper.getName();
                 metapapers.add(ExtractPdf.extract(paper));
                 progress++;
                 progressTextField.setText(String.valueOf(progress) + "/" + papers.length);
                 System.out.println(String.valueOf(progress));
-            }
-        } catch (FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "Config file not found", "ERROR",
-                    JOptionPane.ERROR_MESSAGE);
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "IOException", "ERROR",
-                    JOptionPane.ERROR_MESSAGE);
-        } catch (AnalysisException ex) {
-            JOptionPane.showMessageDialog(null, "AnalysisException\n" + filename, "ERROR",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-    }
             
+            } catch (FileNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Config file not found", "ERROR",
+                        JOptionPane.ERROR_MESSAGE);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "IOException", "ERROR",
+                        JOptionPane.ERROR_MESSAGE);
+            } catch (AnalysisException ex) {
+                JOptionPane.showMessageDialog(null, "AnalysisException\n" + filename, "ERROR",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }      
     
     private void saveXml() {
         String issueTitle = issueTittelTextField.getText();
@@ -151,6 +152,22 @@ public class ExtractorView extends javax.swing.JFrame {
         thread.start();
     }
 
+    
+    private void openAddView(){
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                parent.setFields(false);
+                ExtratorAddView eev = new ExtratorAddView(parent, metapapers);
+                eev.addWindowListener(new WindowAdapter(){
+                    public void windowClosing(WindowEvent e){
+                        parent.setFields(true);
+                    }});
+                eev.setVisible(true);
+                metapapers = eev.getMetapapers();
+            }
+        });
+    }
+    
     private void openEditView(){
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -189,6 +206,7 @@ public class ExtractorView extends javax.swing.JFrame {
         progressTextField = new javax.swing.JTextField();
         progressLabel = new javax.swing.JLabel();
         extractButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -279,6 +297,13 @@ public class ExtractorView extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Add");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -318,6 +343,8 @@ public class ExtractorView extends javax.swing.JFrame {
                         .addComponent(EditButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(saveButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -355,7 +382,8 @@ public class ExtractorView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
                     .addComponent(EditButton)
-                    .addComponent(extractButton))
+                    .addComponent(extractButton)
+                    .addComponent(jButton1))
                 .addContainerGap())
         );
 
@@ -386,6 +414,10 @@ public class ExtractorView extends javax.swing.JFrame {
         this.startExtractionThread();
     }//GEN-LAST:event_extractButtonActionPerformed
 
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+        this.openAddView();
+    }//GEN-LAST:event_addButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton EditButton;
@@ -402,6 +434,7 @@ public class ExtractorView extends javax.swing.JFrame {
     private javax.swing.JLabel issueYearFormatLabel;
     private javax.swing.JLabel issueYearLabel;
     private javax.swing.JTextField issueYearTextField;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel progressLabel;
     private javax.swing.JTextField progressTextField;
     private javax.swing.JButton saveButton;

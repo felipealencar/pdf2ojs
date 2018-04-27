@@ -78,8 +78,8 @@ public class ExtractPdf {
         String resumo = sbcAbstract;
         
         if (sbcAbstract.contains("Resumo.")){
-            String split[] = sbcAbstract.split("Resumo. ");
-            resumo = split[1];
+            String split[] = sbcAbstract.split("Resumo.");
+            resumo = split[1].replaceAll("(^\\h*)", ""); //tira os espaços em branco depois do Resumo. independente se é normal ou non-breakable
         }
         
         System.out.println(resumo);        

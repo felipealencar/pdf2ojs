@@ -282,7 +282,7 @@ public class ExportOjs {
                 if (author.getName().isEmpty()) {
                     strAuthor = strAuthor.replace(OJS_FIRST_NAME, "Author");
                 } else {
-                    strAuthor = strAuthor.replace(OJS_FIRST_NAME, author.getName());
+                    strAuthor = strAuthor.replace(OJS_FIRST_NAME, author.getName().substring(0, author.getName().lastIndexOf(" ")));
                 }
                 strAuthor = strAuthor.replace(OJS_LAST_NAME, this.getAuthorName(author));
                 strAuthor = strAuthor.replace(OJS_EMAIL, "noemail@domain.com"/*this.getAuthorEmail(author)*/);

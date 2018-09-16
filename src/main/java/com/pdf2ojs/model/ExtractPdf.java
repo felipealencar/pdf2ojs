@@ -30,101 +30,104 @@ import org.jdom.Document;
 import pl.edu.icm.cermine.ContentExtractor;
 import pl.edu.icm.cermine.exception.AnalysisException;
 
-
 /**
  *
  * @author gustavo
  */
-public class ExtractPdf {
-    
-
-    static private String replaceString(String abs) {
+public class ExtractPdf
+{
+    static private String replaceString( String abs )
+    {
         String result = abs;
-        result = result.replaceAll("c¸", "ç");
-        result = result.replaceAll("ç ", "ç");
-        result = result.replaceAll("a˜", "ã");
-        result = result.replaceAll("a´", "á");
-        result = result.replaceAll("aˆ", "â");
-        result = result.replaceAll("a`", "á");
-        result = result.replaceAll("e´", "é");
-        result = result.replaceAll("eˆ", "ê");
-        result = result.replaceAll("´ı", "í");
-        result = result.replaceAll("o´", "ó");
-        result = result.replaceAll("o˜", "õ");
-        result = result.replaceAll("oˆ", "õ");
-        result = result.replaceAll("u´", "ú");
+        result = result.replaceAll( "c¸", "ç" );
+        result = result.replaceAll( "ç ", "ç" );
+        result = result.replaceAll( "a˜", "ã" );
+        result = result.replaceAll( "a´", "á" );
+        result = result.replaceAll( "aˆ", "â" );
+        result = result.replaceAll( "a`", "á" );
+        result = result.replaceAll( "e´", "é" );
+        result = result.replaceAll( "eˆ", "ê" );
+        result = result.replaceAll( "´ı", "í" );
+        result = result.replaceAll( "o´", "ó" );
+        result = result.replaceAll( "o˜", "õ" );
+        result = result.replaceAll( "oˆ", "õ" );
+        result = result.replaceAll( "u´", "ú" );
         
-        result = result.replaceAll("A˜", "Ã");
-        result = result.replaceAll("A´", "Á");
-        result = result.replaceAll("Aˆ", "Â");
-        result = result.replaceAll("A`", "Á");
-        result = result.replaceAll("E´", "É");
-        result = result.replaceAll("Eˆ", "Ê");
-        result = result.replaceAll("´I", "Í");
-        result = result.replaceAll("O´", "Ó");
-        result = result.replaceAll("O˜", "õ");
-        result = result.replaceAll("Oˆ", "Ô");
-        result = result.replaceAll("U´", "Ú");
+        result = result.replaceAll( "A˜", "Ã" );
+        result = result.replaceAll( "A´", "Á" );
+        result = result.replaceAll( "Aˆ", "Â" );
+        result = result.replaceAll( "A`", "Á" );
+        result = result.replaceAll( "E´", "É" );
+        result = result.replaceAll( "Eˆ", "Ê" );
+        result = result.replaceAll( "´I", "Í" );
+        result = result.replaceAll( "O´", "Ó" );
+        result = result.replaceAll( "O˜", "õ" );
+        result = result.replaceAll( "Oˆ", "Ô" );
+        result = result.replaceAll( "U´", "Ú" );
         
-        result = result.replaceAll("ã o ", "ão ");
-        result = result.replaceAll(" á", "á");
-        result = result.replace(" ú", "ú");
-        result = result.replace("&", " ");
+        result = result.replaceAll( "ã o ", "ão " );
+        result = result.replaceAll( " á", "á" );
+        result = result.replace( " ú", "ú" );
+        result = result.replace( "&", " " );
         
         return result;
     }
     
-    static private String getSbcAbstract(String sbcAbstract) {
+    static private String getSbcAbstract( String sbcAbstract )
+    {
         String resumo = sbcAbstract;
         
-        if (sbcAbstract.contains("Resumo.")){
-            String split[] = sbcAbstract.split("Resumo.");
-            resumo = split[1].replaceAll("(^\\h*)", ""); //tira os espaços em branco depois do Resumo. independente se é normal ou non-breakable
+        if ( sbcAbstract.contains( "Resumo." ) )
+        {
+            String split[] = sbcAbstract.split( "Resumo." );
+            resumo = split[1].replaceAll( "(^\\h*)", "" ); //tira os espaços em branco depois do Resumo. independente se é normal ou non-breakable
         }
         
-        System.out.println(resumo);        
         return resumo;
     }
     
-    static public ArticleMeta extract(File paper) throws AnalysisException, FileNotFoundException, IOException  {
+    static public ArticleMeta extract( String userHome, File paper ) throws AnalysisException, FileNotFoundException, IOException
+    {
         /* Get Elements from the pdf */
         ContentExtractor extractor;
         extractor = new ContentExtractor();
         List<ArticleMeta.ContributorMeta> index = new ArrayList<ArticleMeta.ContributorMeta>();
         
-        InputStream inputStream = new FileInputStream(paper.getAbsolutePath());              
-        extractor.setPDF(inputStream);
+        InputStream inputStream = new FileInputStream( userHome + "tmp_" + paper.getName() );
+        extractor.setPDF( inputStream );
         Element result = extractor.getContentAsNLM();
-        Document doc = new Document(result);
+        Document doc = new Document( result );
 
         /* Parse to xml to manipulate */
-        ArticleMeta articleMeta = ArticleMeta.extractNLM(doc);
-        articleMeta.setPdf(paper);
-        articleMeta.setAbstractText(getSbcAbstract(articleMeta.getAbstractText()));
-        articleMeta.setAbstractText(replaceString(articleMeta.getAbstractText()));
-        articleMeta.setTitle(replaceString(articleMeta.getTitle()));
-        
-        if (articleMeta.getAuthors().size() > 10) {
+        ArticleMeta articleMeta = ArticleMeta.extractNLM( doc );
+        articleMeta.setPdf( paper );
+        articleMeta.setAbstractText( getSbcAbstract( articleMeta.getAbstractText() ) );
+        articleMeta.setAbstractText( replaceString( articleMeta.getAbstractText() ) );
+        articleMeta.setTitle( replaceString( articleMeta.getTitle() ) );
+
+        if ( articleMeta.getAuthors().size() > 10 )
+        {
             List<ContributorMeta> cm = new ArrayList<ContributorMeta>();
             ContributorMeta a = new ContributorMeta();
-            a.setName("Unknown Author");
-            cm.add(a);
-            articleMeta.setAuthors(cm);
+            a.setName( "Unknown Author" );
+            cm.add( a );
+            articleMeta.setAuthors( cm );
         }
-        
-        for (ArticleMeta.ContributorMeta author : articleMeta.getAuthors()) {
-            author.setName(replaceString(author.getName()));
-            if (author.getName().contains("@")) {
-                System.out.println("remover " + articleMeta.getAuthors().indexOf(author));
-                index.add(author);
+
+        for ( ArticleMeta.ContributorMeta author : articleMeta.getAuthors() )
+        {
+            author.setName( replaceString( author.getName() ) );
+            if ( author.getName().contains( "@" ) )
+            {
+                index.add( author );
             }
         }
 
-        for (ArticleMeta.ContributorMeta i : index){
-            articleMeta.getAuthors().remove(i);
+        for ( ArticleMeta.ContributorMeta i : index )
+        {
+            articleMeta.getAuthors().remove( i );
         }
-
+        
         return articleMeta;
-    }
-    
+    }   
 }

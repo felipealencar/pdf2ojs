@@ -20,11 +20,9 @@ package com.pdf2ojs.model;
 import com.pdf2ojs.main.Main;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import org.apache.commons.codec.binary.Base64;
 import java.util.List;
@@ -45,8 +43,8 @@ import org.apache.pdfbox.util.PDFTextStripperByArea;
  *
  * @author gustavo
  */
-public class ExportOjs {
-
+public class ExportOjs
+{
     private final String OJS_XML_HEADER = 
         "<?xml version=\"1.0\"?>\n" +
         "  <issues xmlns=\"http://pkp.sfu.ca\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://pkp.sfu.ca native.xsd\">\n" +
@@ -143,15 +141,14 @@ public class ExportOjs {
 
     
     private String articleIdName = "articleId.txt";
-    //private String articleIdName = "C:Users/Nome/articleId.txt";
     private String xmlPath;
     private String issueDate;
     private String issueTitle;
     private String issueYear;
     private List<ArticleMeta> metaPapers = new ArrayList<ArticleMeta>();
-    
 
-    public ExportOjs(String issueTitle, String issueDate, String xmlPath, String issueYear, List<ArticleMeta> metaPapers) {
+    public ExportOjs( String issueTitle, String issueDate, String xmlPath, String issueYear, List<ArticleMeta> metaPapers )
+    {
         this.issueTitle = issueTitle;
         this.issueDate = issueDate;
         this.issueYear = issueYear;
@@ -159,7 +156,8 @@ public class ExportOjs {
         this.metaPapers = metaPapers;
     }
     
-    private byte[] readPdfContent(String path) throws IOException {
+    private byte[] readPdfContent( String path ) throws IOException
+    {
         String st = "";
         PDDocument document = null;
         document = PDDocument.load(new File(path));
@@ -187,24 +185,26 @@ public class ExportOjs {
         Files.write(Paths.get(inputFilePath), String.valueOf(id).getBytes(), StandardOpenOption.WRITE);
     }
     
-    private String fileToString(String filename) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(filename));
+    private String fileToString( String filename ) throws IOException
+    {
+        BufferedReader reader = new BufferedReader( new FileReader( filename ) );
         StringBuilder builder = new StringBuilder();
         String line;    
 
         // For every line in the file, append it to the string builder
-        System.out.println("aqui");
-        while((line = reader.readLine()) != null) {
-            builder.append(line);
+        while ( ( line = reader.readLine() ) != null )
+        {
+            builder.append( line );
         }
 
         reader.close();
         return builder.toString();
-}
-   
-    private String getAuthorName(ContributorMeta author){
-        String s[] = author.getName().split(" ");
-        return author.getName().split(" ")[s.length-1];
+    }
+
+    private String getAuthorName( ContributorMeta author )
+    {
+        String s[] = author.getName().split( " " );
+        return author.getName().split( " " )[s.length-1];
     }
     
     private String getAuthorEmail(ContributorMeta author)
@@ -212,27 +212,27 @@ public class ExportOjs {
         return (author.getEmail() == null) ? "noemail@domain.com" : author.getEmail();
     }
     
-    public void makeXml() throws FileNotFoundException, IOException, URISyntaxException {
+    public void makeXml() throws FileNotFoundException, IOException, URISyntaxException
+    {
+        System.out.println( "path" + xmlPath );
         String resultXml = OJS_XML_HEADER;
-        Writer writer = new BufferedWriter(new OutputStreamWriter(
-                new FileOutputStream(xmlPath), "utf-8"));
-        
+        Writer writer = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( xmlPath ), "utf-8" ) );
         String strIssue;
         strIssue = OJS_XML_ISSUE_IDENTIFICATION;
         
-        
-        strIssue = strIssue.replace(OJS_ISSUE_TITLE, this.issueTitle);
-        strIssue = strIssue.replace(OJS_ISSUE_DATE_PUBLISHED, this.issueDate);
-        strIssue = strIssue.replace(OJS_ISSUE_DATE_LAST_MODIFIED, this.issueDate);
-        strIssue = strIssue.replace(OJS_ISSUE_YEAR, this.issueYear);
+        strIssue = strIssue.replace( OJS_ISSUE_TITLE, this.issueTitle );
+        strIssue = strIssue.replace( OJS_ISSUE_DATE_PUBLISHED, this.issueDate );
+        strIssue = strIssue.replace( OJS_ISSUE_DATE_LAST_MODIFIED, this.issueDate );
+        strIssue = strIssue.replace( OJS_ISSUE_YEAR, this.issueYear );
 
         resultXml += strIssue + OJS_XML_ISSUE_SECTIONS + OJS_XML_ISSUE_ARTICLES;
-        writer.write(resultXml);
+        writer.write( resultXml );
         resultXml = "";
         
-        int articleId = this.getArticleId();
+        int articleId = 1;
         int nUnknownAuthor = 0;
-        for (ArticleMeta am : this.metaPapers){
+        for ( ArticleMeta am : this.metaPapers )
+        {
             String strArticle = OJS_XML_ISSUE_ARTICLE;
             String strSubmission = OJS_XML_ISSUE_SUBMISSION;
             String strGalley = OJS_XML_ARTICLE_GALLEY;
@@ -241,73 +241,86 @@ public class ExportOjs {
             articleId++;
             boolean firstAuthor = true;
 
-            if ((am.getTitle().isEmpty()) || (am.getTitle().equals(""))) {
+            if ( ( am.getTitle().isEmpty() ) || ( am.getTitle().equals( "" ) ) )
+            {
                 continue;
             }
             
-            strArticle = strArticle.replace(OJS_ARTICLE_ID, String.valueOf(articleId));
-            strArticle = strArticle.replace(OJS_ARTICLE_DATE_SUBMITTED, this.issueDate);
-            strArticle = strArticle.replace(OJS_ARTICLE_DATE_PUBLISHED, this.issueDate);
-            strArticle = strArticle.replace(OJS_ARTICLE_TITLE, am.getTitle());
-            strArticle = strArticle.replace(OJS_ARTICLE_ABSTRACT, am.getAbstractText());
+            strArticle = strArticle.replace( OJS_ARTICLE_ID, String.valueOf( articleId ) );
+            strArticle = strArticle.replace( OJS_ARTICLE_DATE_SUBMITTED, this.issueDate );
+            strArticle = strArticle.replace( OJS_ARTICLE_DATE_PUBLISHED, this.issueDate );
+            strArticle = strArticle.replace( OJS_ARTICLE_TITLE, am.getTitle() );
+            strArticle = strArticle.replace( OJS_ARTICLE_ABSTRACT, am.getAbstractText() );
                
-            strSubmission = strSubmission.replace(OJS_FILE_NAME, "article" + am.getPdf().getName());
-            strSubmission = strSubmission.replace(OJS_REV_NUMBER, String.valueOf(articleId));
-            strSubmission = strSubmission.replace(OJS_DATE_UPLOADE, this.issueDate);
-            strSubmission = strSubmission.replace(OJS_DATE_MODIFIED, this.issueDate);
-            strSubmission = strSubmission.replace(OJS_FILE_SIZE, String.valueOf(am.getPdf().length()));
-            strSubmission = strSubmission.replace(OJS_EMBED, Base64.encodeBase64String(Files.readAllBytes(Paths.get(am.getPdf().getAbsolutePath()))));
-            strSubmission = strSubmission.replace(OJS_SUBMISSION_ID, String.valueOf(articleId));
+            strSubmission = strSubmission.replace( OJS_FILE_NAME, "article" + am.getPdf().getName() );
+            strSubmission = strSubmission.replace( OJS_REV_NUMBER, String.valueOf( articleId ) );
+            strSubmission = strSubmission.replace( OJS_DATE_UPLOADE, this.issueDate );
+            strSubmission = strSubmission.replace( OJS_DATE_MODIFIED, this.issueDate );
+            strSubmission = strSubmission.replace( OJS_FILE_SIZE, String.valueOf( am.getPdf().length() ) );
+            strSubmission = strSubmission.replace( OJS_EMBED, Base64.encodeBase64String( Files.readAllBytes( Paths.get( am.getPdf().getAbsolutePath() ) ) ) );
+            strSubmission = strSubmission.replace( OJS_SUBMISSION_ID, String.valueOf( articleId ) );
 
-            strGalley = strGalley.replace(OJS_ARTICLE_GALLEY_ID, String.valueOf(articleId));
-            strGalley = strGalley.replace(OJS_ARTICLE_GALLEY_REVISION, String.valueOf(articleId));
-            strGalley = strGalley.replace(OJS_ARTICLE_REF, String.valueOf(articleId));
+            strGalley = strGalley.replace( OJS_ARTICLE_GALLEY_ID, String.valueOf( articleId ) );
+            strGalley = strGalley.replace( OJS_ARTICLE_GALLEY_REVISION, String.valueOf( articleId ) );
+            strGalley = strGalley.replace( OJS_ARTICLE_REF, String.valueOf( articleId ) );
 
-            if (am.getAuthors().size() < 1) {
+            if ( am.getAuthors().size() < 1 )
+            {
                 ContributorMeta unknownAuthor = new ContributorMeta();
-                unknownAuthor.setName("Unknown Author");
+                unknownAuthor.setName( "Unknown Author" );
                 am.getAuthors().add(unknownAuthor);
                 
-                System.out.println("Paper: " + am.getTitle());
-                System.out.println("Unknown Author");
+                System.out.println( "Paper: " + am.getTitle() );
+                System.out.println( "Unknown Author" );
                 nUnknownAuthor++;
             }
             
-            for (ContributorMeta author : am.getAuthors()) {
-                if (author.getName().length() > 40) {
-                    System.out.println("Continue");
+            for ( ContributorMeta author : am.getAuthors() )
+            {
+                if ( author.getName().length() > 40 )
+                {
                     continue;
                 }
-                strAuthor = OJS_XML_ISSUE_AUTHOR;
-                if (author.getName().isEmpty()) {
-                    strAuthor = strAuthor.replace(OJS_FIRST_NAME, "Author");
-                } else {
-                    strAuthor = strAuthor.replace(OJS_FIRST_NAME, author.getName().substring(0, author.getName().lastIndexOf(" ")));
-                }
-                strAuthor = strAuthor.replace(OJS_LAST_NAME, this.getAuthorName(author));
-                strAuthor = strAuthor.replace(OJS_EMAIL, "noemail@domain.com"/*this.getAuthorEmail(author)*/);
-                strAuthor = strAuthor.replace(OJS_PRIMARY_CONTACT, String.valueOf(firstAuthor));
-                               
-                if (firstAuthor) {
-                    strSubmission = strSubmission.replace(OJS_AUTHOR, this.getAuthorName(author));
-                    strSubmission = strSubmission.replace(OJS_UPLOADER, "ojs_sbc");
 
+                strAuthor = OJS_XML_ISSUE_AUTHOR;
+                if ( author.getName().isEmpty() )
+                {
+                    strAuthor = strAuthor.replace( OJS_FIRST_NAME, "Author" );
+                }
+                else
+                {
+                    if ( author.getName().lastIndexOf(" ") < 0 )
+                    {
+                        strAuthor = strAuthor.replace( OJS_FIRST_NAME, "" );
+                    }
+                    else
+                    {
+                        strAuthor = strAuthor.replace( OJS_FIRST_NAME, author.getName().substring(0, author.getName().lastIndexOf( " " ) ) );
+                    }
+                }
+                
+                strAuthor = strAuthor.replace( OJS_LAST_NAME, this.getAuthorName( author ) );
+                strAuthor = strAuthor.replace( OJS_EMAIL, "noemail@domain.com" );
+                strAuthor = strAuthor.replace( OJS_PRIMARY_CONTACT, String.valueOf( firstAuthor ) );
+                               
+                if ( firstAuthor )
+                {
+                    strSubmission = strSubmission.replace( OJS_AUTHOR, this.getAuthorName( author ) );
+                    strSubmission = strSubmission.replace( OJS_UPLOADER, "ojs_sbc" );
                     firstAuthor = false;
                 }
                 strAuthors += strAuthor;
             }
             
             strAuthors = OJS_XML_ISSUE_AUTHORS + strAuthors + OJS_XML_ISSUE_END_AUTHORS;
-            resultXml +=  strArticle + strAuthors + strSubmission + strGalley + OJS_XML_ISSUE_END_ARTICLE;
-            writer.write(resultXml);
+            resultXml += strArticle + strAuthors + strSubmission + strGalley + OJS_XML_ISSUE_END_ARTICLE;
+            writer.write( resultXml );
             resultXml = "";
         }
         resultXml += OJS_XML_END_FILE;
-        this.saveArticleId(articleId);
-        writer.write(resultXml);
+        writer.write( resultXml );
         writer.close();
         
-        System.out.println("Finished xml process: " + nUnknownAuthor + " authors unknown");
+        System.out.println( "Finished xml process: " + nUnknownAuthor + " authors unknown" );
     }
-
 }

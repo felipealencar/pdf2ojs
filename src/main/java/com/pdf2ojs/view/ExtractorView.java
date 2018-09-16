@@ -28,10 +28,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import pl.edu.icm.cermine.exception.AnalysisException;
 
@@ -39,148 +36,278 @@ import pl.edu.icm.cermine.exception.AnalysisException;
  *
  * @author gustavo
  */
-public class ExtractorView extends javax.swing.JFrame {
-
+public class ExtractorView extends javax.swing.JFrame
+{
+    private String system = System.getProperty( "os.name" );
+    private String userHome = System.getProperty( "user.home" ) + "/";
     private File[] papers;
     private String xmlPath;
     private ExtractorView parent = this;
     List<ArticleMeta> metapapers = new ArrayList<ArticleMeta>();
     
-    public ExtractorView() {
+    public ExtractorView()
+    {
         initComponents();
-        filesTextField.setEditable(false);       
-        xmlTextField.setEditable(false);
-        progressTextField.setEditable(false);
-        this.setTitle("PDF to OJS");
+        filesTextField.setEditable( false );
+        xmlTextField.setEditable( false );
+        progressTextField.setEditable( false );
+        this.setTitle( "PDF to OJS" );
+        extractButton.setEnabled( false );
     }
 
-    private void openFileChooser() {
+    private void openFileChooser()
+    {
         JFileChooser file = new JFileChooser();
-        file.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        file.setMultiSelectionEnabled(true);
-        int i = file.showSaveDialog(null);
-        if (i == 1) {
-            filesTextField.setText("");
-        } else {
+        file.setFileSelectionMode( JFileChooser.FILES_ONLY );
+        file.setMultiSelectionEnabled( true );
+        int i = file.showSaveDialog( null );
+        
+        if ( i == 1 )
+        {
+            filesTextField.setText( "" );
+        }
+        else
+        {
             papers = file.getSelectedFiles();
-            filesTextField.setText(papers.length + " files selected");
-            progressTextField.setText("0/" + papers.length);
+            filesTextField.setText( papers.length + " files selected" );
+            progressTextField.setText( "0/" + papers.length );
+            extractButton.setEnabled( true );
         }
     }
 
-    private void openFileSave() {
+    private void openFileSave()
+    {
         JFileChooser chooser = new JFileChooser();
-        int retrival = chooser.showSaveDialog(null);
-        if (retrival == JFileChooser.APPROVE_OPTION) {
-            try {
+        int retrival = chooser.showSaveDialog( null );
+        if ( retrival == JFileChooser.APPROVE_OPTION )
+        {
+            try
+            {
                 xmlPath = chooser.getSelectedFile().getAbsolutePath();
-                xmlTextField.setText(xmlPath);
-            } catch (Exception ex) {
-                ex.printStackTrace();
+                xmlTextField.setText( xmlPath );
             }
+            catch ( Exception e )
+            {
+                e.printStackTrace();
+            }
+        }
     }
-}
 
-    public void setFields(boolean enable){
-        issueDateTextField.setEditable(enable);
-        issueTittelTextField.setEditable(enable);
-        issueYearTextField.setEditable(enable);
-        fileChooserButton.setEnabled(enable);
-        fileSaveButton.setEnabled(enable);
-        EditButton.setEnabled(enable);
-        saveButton.setEnabled(enable);
-        extractButton.setEnabled(enable);
+    public void setFields( boolean enable )
+    {
+        issueDateTextField.setEditable( enable );
+        issueTittelTextField.setEditable( enable );
+        issueYearTextField.setEditable( enable );
+        fileChooserButton.setEnabled( enable );
+        fileSaveButton.setEnabled( enable );
+        EditButton.setEnabled( enable );
+        saveButton.setEnabled( enable );
+        extractButton.setEnabled( enable );
     }
     
-    private void extractPapers(){
+    private void generateTempFiles()
+    {
+        if ( system != null )
+        {
+            if ( system.startsWith( "Linux" ) )
+            {
+                for ( File paper : papers )
+                {
+                    try 
+                    {
+                        Runtime.getRuntime().exec( new String[] { "bash", "-c", "gs -o " + userHome + "tmp_" + paper.getName() + " -dNOPAUSE -dSAFER -sDEVICE=pdfwrite -sColorConversionStrategy=Gray -dProcessColorModel=/DeviceGray -f " + paper.getAbsolutePath() } );
+                    }
+                    catch ( IOException e )
+                    {
+                        JOptionPane.showMessageDialog( null, "Error in generation of " + paper.getName() + " temp file", "ERROR", JOptionPane.ERROR_MESSAGE );
+                    }
+                }
+            }
+            else if ( system.startsWith( "Windows" ) )
+            {
+                for ( File paper : papers )
+                {
+                    try 
+                    {
+                        Runtime.getRuntime().exec( new String[] { "cmd.exe", "/c", "C:/gswin64c -sOutputFile=" + userHome + "tmp_" + paper.getName() + " -dNOPAUSE -dSAFER -sDEVICE=pdfwrite -sColorConversionStrategy=Gray -dProcessColorModel=/DeviceGray -f " + paper.getAbsolutePath() } );
+                    }
+                    catch ( IOException e )
+                    {
+                        JOptionPane.showMessageDialog( null, "Error in generation of " + paper.getName() + " temp file", "ERROR", JOptionPane.ERROR_MESSAGE );
+                    }
+                }
+            }
+        }
+    }
+    
+    private void deleteTempFiles()
+    {
+        if ( system != null )
+        {
+            if ( system.startsWith( "Linux" ) )
+            {
+                for ( File paper : papers )
+                {
+                    try 
+                    {
+                        Runtime.getRuntime().exec( new String[] { "bash", "-c", "rm " + userHome + "tmp_" + paper.getName() } );
+                    }
+                    catch ( IOException e )
+                    {
+                        JOptionPane.showMessageDialog( null, "Error in removing " + paper.getName() + " temp file", "ERROR", JOptionPane.ERROR_MESSAGE );
+                    }
+                }
+            }
+            else if ( system.startsWith( "Windows" ) )
+            {
+                for ( File paper : papers )
+                {
+                    try 
+                    {
+                        Runtime.getRuntime().exec( new String[] { "cmd.exe", "/c", "del /f " + userHome.replace( "/", "\\" ) + "tmp_" + paper.getName() } );
+                    }
+                    catch ( IOException e )
+                    {
+                        JOptionPane.showMessageDialog( null, "Error in removing " + paper.getName() + " temp file", "ERROR", JOptionPane.ERROR_MESSAGE );
+                    }
+                }
+            }
+        }
+    }
+    
+    private void extractPapers()
+    {
         metapapers = new ArrayList<ArticleMeta>();
         int progress = 0;
         String filename = "";
-        for (File paper : papers) {
-            try {
-            
+        
+        this.generateTempFiles();
+        
+        for ( File paper : papers )
+        {
+            try
+            {
                 filename = paper.getName();
-                metapapers.add(ExtractPdf.extract(paper));
+                metapapers.add( ExtractPdf.extract( userHome, paper ) );
                 progress++;
-                progressTextField.setText(String.valueOf(progress) + "/" + papers.length);
-                System.out.println(String.valueOf(progress));
-            
-            } catch (FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "Config file not found", "ERROR",
-                        JOptionPane.ERROR_MESSAGE);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "IOException", "ERROR",
-                        JOptionPane.ERROR_MESSAGE);
-            } catch (AnalysisException ex) {
-                JOptionPane.showMessageDialog(null, "AnalysisException\n" + filename, "ERROR",
-                        JOptionPane.ERROR_MESSAGE);
+                progressTextField.setText( String.valueOf( progress ) + "/" + papers.length );
+            }
+            catch ( FileNotFoundException e )
+            {
+                JOptionPane.showMessageDialog( null, "Config file not found", "ERROR", JOptionPane.ERROR_MESSAGE );
+            }
+            catch ( IOException e )
+            {
+                JOptionPane.showMessageDialog( null, "IOException", "ERROR", JOptionPane.ERROR_MESSAGE );
+            }
+            catch ( AnalysisException e )
+            {
+                JOptionPane.showMessageDialog( null, "AnalysisException\n" + filename, "ERROR", JOptionPane.ERROR_MESSAGE );
             }
         }
+        
+        this.deleteTempFiles();
     }      
     
-    private void saveXml() {
+    private void saveXml()
+    {
         String issueTitle = issueTittelTextField.getText();
         String issueDate = issueDateTextField.getText();
         String issueYear = issueYearTextField.getText();
 
-        try {
-            ExportOjs ojs = new ExportOjs(issueTitle, issueDate, xmlPath, issueYear, metapapers);
-            ojs.makeXml();
-            JOptionPane.showMessageDialog(null, "File created in:\n" + xmlPath, "Alert",
-                    JOptionPane.WARNING_MESSAGE);
-
-        } catch (FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "Config file not found", "ERROR",
-                    JOptionPane.ERROR_MESSAGE);
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "IOException", "ERROR",
-                    JOptionPane.ERROR_MESSAGE);
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(ExtractorView.class.getName()).log(Level.SEVERE, null, ex);
+        try
+        {
+            if ( xmlPath != null )
+            {
+                ExportOjs ojs = new ExportOjs( issueTitle, issueDate, xmlPath, issueYear, metapapers );
+                ojs.makeXml();
+                JOptionPane.showMessageDialog( null, "File created in:\n" + xmlPath, "Alert", JOptionPane.INFORMATION_MESSAGE );
+            }
+            else
+            {
+                JOptionPane.showMessageDialog( null, "You should select a file to save xml content!", "Alert", JOptionPane.WARNING_MESSAGE );
+            }
+        }
+        catch ( FileNotFoundException e )
+        {
+            JOptionPane.showMessageDialog( null, "Config file not found", "ERROR", JOptionPane.ERROR_MESSAGE );
+        }
+        catch ( IOException e )
+        {
+            JOptionPane.showMessageDialog( null, "IOException", "ERROR", JOptionPane.ERROR_MESSAGE );
+        }
+        catch ( URISyntaxException e )
+        {
+            JOptionPane.showMessageDialog( null, "URISyntaxException", "ERROR", JOptionPane.ERROR_MESSAGE );
         }
     }
     
-    private void startExtractionThread() {
-        setFields(false);        
-        Thread thread = new Thread() {
+    private void startExtractionThread()
+    {
+        setFields( false );        
+        Thread thread = new Thread()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 extractPapers();
-                setFields(true);
+                setFields( true );
             }
         };
         thread.start();
     }
 
-    
-    private void openAddView(){
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                parent.setFields(false);
-                ExtratorAddView eev = new ExtratorAddView(parent, metapapers);
-                eev.addWindowListener(new WindowAdapter(){
-                    public void windowClosing(WindowEvent e){
-                        parent.setFields(true);
-                    }});
-                eev.setVisible(true);
+    private void openAddView()
+    {
+        java.awt.EventQueue.invokeLater( new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                parent.setFields( false );
+                ExtratorAddView eev = new ExtratorAddView( parent, metapapers );
+                eev.addWindowListener( new WindowAdapter()
+                {
+                    @Override
+                    public void windowClosing( WindowEvent e )
+                    {
+                        parent.setFields( true );
+                    }
+                } );
+                eev.setVisible( true );
                 metapapers = eev.getMetapapers();
             }
-        });
+        } );
     }
     
-    private void openEditView(){
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                parent.setFields(false);
-                ExtratorEditView eev = new ExtratorEditView(parent, metapapers);
-                eev.addWindowListener(new WindowAdapter(){
-                    public void windowClosing(WindowEvent e){
-                        parent.setFields(true);
-                    }});
-                eev.setVisible(true);
-                metapapers = eev.getMetapapers();
+    private void openEditView()
+    {
+        java.awt.EventQueue.invokeLater( new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if ( metapapers.size() > 0 )
+                {
+                    parent.setFields( false );
+                    ExtratorEditView eev = new ExtratorEditView( parent, metapapers );
+                    eev.addWindowListener( new WindowAdapter()
+                    {
+                        @Override
+                        public void windowClosing( WindowEvent e )
+                        {
+                            parent.setFields( true );
+                        }
+                    } );
+                    eev.setVisible( true );
+                    metapapers = eev.getMetapapers();
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog( null, "There is no metapaper to edit!", "Alert", JOptionPane.WARNING_MESSAGE );
+                }
             }
-        });
+        } );
     }
             
     @SuppressWarnings("unchecked")

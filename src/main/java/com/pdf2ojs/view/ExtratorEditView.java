@@ -26,8 +26,8 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 
-public class ExtratorEditView extends javax.swing.JFrame {
-
+public class ExtratorEditView extends javax.swing.JFrame
+{
     private List<ArticleMeta> metapapers = new ArrayList<ArticleMeta>();
     private List<JTextField> authorNames = new ArrayList<JTextField>();
     private int index = 0;
@@ -39,104 +39,116 @@ public class ExtratorEditView extends javax.swing.JFrame {
      * @param parent
      * @param metaPapers
      */
-    public ExtratorEditView(ExtractorView parent, List<ArticleMeta> metaPapers) {
+    public ExtratorEditView( ExtractorView parent, List<ArticleMeta> metaPapers )
+    {
         initComponents();
         initAuthorNames();
         this.metapapers = metaPapers;
         this.parent = parent;
         max = this.metapapers.size();
-        abstractTextArea.setLineWrap(true);
-        abstractTextArea.setWrapStyleWord(true);
-        abstractTextArea.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        abstractTextArea.setLineWrap( true );
+        abstractTextArea.setWrapStyleWord( true );
+        abstractTextArea.setComponentOrientation( ComponentOrientation.LEFT_TO_RIGHT );
         setFields();
-        this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        this.setDefaultCloseOperation( JFrame.HIDE_ON_CLOSE );
     }
 
-    public List<ArticleMeta> getMetapapers(){
+    public List<ArticleMeta> getMetapapers()
+    {
         return metapapers;
     }
     
-    private void nextPaper(){
+    private void nextPaper()
+    {
         index++;
-        System.err.println("index: " + index);
-        if (index > max-1){
+        if ( index > max-1 )
+        {
             index = 0;
-            System.err.println("Ultrapassou o MAX volta para: " + index);
         }
-        setFields();
-    }
-    
-    private void backPaper() {
-        index--;
-        System.err.println("index: " + index);
-        if (index < 0){
-            index = max-1;
-            System.err.println("Ultrapassou o MIN volta para: " + index);
-        }
-        setFields();
-    }
-    
-    private void setFields() {
-        int fieldIndex = 0;
-        ArticleMeta article = metapapers.get(index);
-        titleTextField.setText(article.getTitle());
-        abstractTextArea.setText(article.getAbstractText());
         
-        for (ContributorMeta author: article.getAuthors()) {
-            authorNames.get(fieldIndex).setText(author.getName());
-            if (author.getName().length() > 40){
-                authorNames.get(fieldIndex).setBackground(Color.red);
-            } else {
-                authorNames.get(fieldIndex).setBackground(Color.WHITE);
+        setFields();
+    }
+    
+    private void backPaper()
+    {
+        index--;
+        if ( index < 0 )
+        {
+            index = max-1;
+        }
+        
+        setFields();
+    }
+    
+    private void setFields()
+    {
+        int fieldIndex = 0;
+        ArticleMeta article = metapapers.get( index );
+        titleTextField.setText( article.getTitle() );
+        abstractTextArea.setText( article.getAbstractText() );
+        
+        for ( ContributorMeta author: article.getAuthors() )
+        {
+            authorNames.get( fieldIndex ).setText( author.getName() );
+            if ( author.getName().length() > 40 )
+            {
+                authorNames.get( fieldIndex ).setBackground( Color.red );
+            }
+            else
+            {
+                authorNames.get( fieldIndex ).setBackground( Color.WHITE );
             }
             fieldIndex++;
         }
-        fileLabel.setText(article.getPdf().getName());
+        fileLabel.setText( article.getPdf() != null ? article.getPdf().getName() : "" );
     }
     
-    private void saveFields(int index) {
+    private void saveFields( int index )
+    {
         List<ContributorMeta> authors = new ArrayList<ContributorMeta>();
         int authorIndex = 0;
-        metapapers.get(index).setTitle(titleTextField.getText());
-        metapapers.get(index).setAbstractText(abstractTextArea.getText());
+        metapapers.get( index ).setTitle( titleTextField.getText() );
+        metapapers.get( index ).setAbstractText( abstractTextArea.getText() );
 
-        for (JTextField authorName : authorNames) {
-            if (!authorName.getText().isEmpty()) {
+        for ( JTextField authorName : authorNames )
+        {
+            if ( !authorName.getText().isEmpty() )
+            {
                 ContributorMeta cm = new ContributorMeta();
-                cm.setName(authorName.getText());
-                authors.add(cm);
-                
-                System.out.println("Paper: " + metapapers.get(index).getTitle());
-                System.out.println("Saving authors:\n");
-                System.out.println("- " + cm.getName());
+                cm.setName( authorName.getText() );
+                authors.add( cm );
+                System.out.println( "Paper: " + metapapers.get( index ).getTitle() );
+                System.out.println( "Saving authors:\n" );
+                System.out.println( "- " + cm.getName() );
             }
         }
 
-        metapapers.get(index).setAuthors(authors);
+        metapapers.get( index ).setAuthors( authors );
     }
     
-private void initAuthorNames() {
-        authorNames.add(author1TextField);
-        authorNames.add(author2TextField);
-        authorNames.add(author3TextField);
-        authorNames.add(author4TextField);
-        authorNames.add(author5TextField);
-        authorNames.add(author6TextField);
-        authorNames.add(author7TextField);
-        authorNames.add(author8TextField);
-        authorNames.add(author9TextField);
-        authorNames.add(author10TextField);
+    private void initAuthorNames()
+    {
+        authorNames.add( author1TextField );
+        authorNames.add( author2TextField );
+        authorNames.add( author3TextField );
+        authorNames.add( author4TextField );
+        authorNames.add( author5TextField );
+        authorNames.add( author6TextField );
+        authorNames.add( author7TextField );
+        authorNames.add( author8TextField );
+        authorNames.add( author9TextField );
+        authorNames.add( author10TextField );
     }
     
     private void cleanFields()
     {
-        abstractTextArea.setText("");
-        titleTextField.setText("");
-        for (JTextField jtf: authorNames){
-            jtf.setText("");
+        abstractTextArea.setText( "" );
+        titleTextField.setText( "" );
+        for ( JTextField jtf: authorNames )
+        {
+            jtf.setText( "" );
         }
     }
-    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

@@ -58,7 +58,7 @@ public class ExportOjs
         "      <id type=\"internal\" advice=\"ignore\">1</id>\n" +
         "        <issue_identification>\n" +
         "          <year>${issueyear}</year>\n" +
-        "          <title locale=\"en_US\">${issueTitle}</title>\n" +
+        "          <title locale=\"pt_BR\">${issueTitle}</title>\n" +
         "        </issue_identification>\n" +
         "        <date_published>${issueDatePublished}</date_published>\n" +
         "        <last_modified>${issueDateLastModified}</last_modified>\n";
@@ -67,8 +67,8 @@ public class ExportOjs
         "      <sections>\n" +
         "        <section ref=\"ART\" seq=\"0\" editor_restricted=\"0\" meta_indexed=\"1\" meta_reviewed=\"1\" abstracts_not_required=\"0\" hide_title=\"0\" hide_author=\"0\" abstract_word_count=\"0\">\n" +
         "          <id type=\"internal\" advice=\"ignore\">1</id>\n" +
-        "          <abbrev locale=\"en_US\">ART</abbrev>\n" +
-        "          <title locale=\"en_US\">Articles</title>\n" +
+        "          <abbrev locale=\"pt_BR\">ART</abbrev>\n" +
+        "          <title locale=\"pt_BR\">Articles</title>\n" +
         "        </section>\n" +
         "      </sections>\n";
     
@@ -81,10 +81,10 @@ public class ExportOjs
     private final String OJS_ARTICLE_DATE_SUBMITTED = "${articleDateSubmitted}";
     private final String OJS_ARTICLE_DATE_PUBLISHED = "${articleDatePublished}";
     private final String OJS_XML_ISSUE_ARTICLE = 
-        "        <article xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" locale=\"en_US\" date_submitted=\"${articleDateSubmitted}\" stage=\"production\" date_published=\"${articleDatePublished}\" section_ref=\"ART\" seq=\"1\" access_status=\"0\">\n" +
+        "        <article xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" locale=\"pt_BR\" date_submitted=\"${articleDateSubmitted}\" stage=\"production\" date_published=\"${articleDatePublished}\" section_ref=\"ART\" seq=\"1\" access_status=\"0\">\n" +
         "          <id type=\"internal\" advice=\"ignore\">${articleID}</id>\n" +
-        "          <title locale=\"en_US\">${articleTitle}</title>\n" +
-        "          <abstract locale=\"en_US\">${articleAbstract}</abstract>\n";
+        "          <title locale=\"pt_BR\">${articleTitle}</title>\n" +
+        "          <abstract locale=\"pt_BR\">${articleAbstract}</abstract>\n";
     
     private final String OJS_XML_ISSUE_AUTHORS = 
         "          <authors xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://pkp.sfu.ca native.xsd\">\n";
@@ -115,7 +115,7 @@ public class ExportOjs
     private final String OJS_XML_ISSUE_SUBMISSION = 
         "          <submission_file xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" stage=\"submission\" id=\"${subId}\" xsi:schemaLocation=\"http://pkp.sfu.ca native.xsd\">\n" +
         "            <revision number=\"${number}\" genre=\"Article Text\" filename=\"${filename}\" viewable=\"true\" date_uploaded=\"${dateUploade}\" date_modified=\"${dateModified}\" filesize=\"${filesize}\" filetype=\"application/pdf\" user_group_ref=\"Author\" uploader=\"${uploader}\">\n" +
-        "              <name locale=\"en_US\">${author}, Author, ${filename}</name>\n" +
+        "              <name locale=\"pt_BR\">${author}, Author, ${filename}</name>\n" +
         "              <embed encoding=\"base64\">${embed}</embed>\n" +
         "            </revision>\n" +
         "          </submission_file>\n";
@@ -126,7 +126,7 @@ public class ExportOjs
     private final String OJS_XML_ARTICLE_GALLEY =
         "          <article_galley xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" approved=\"false\" xsi:schemaLocation=\"http://pkp.sfu.ca native.xsd\">\n" +
         "            <id type=\"internal\" advice=\"ignore\">${galleyId}</id>\n" +
-        "            <name locale=\"en_US\">PDF</name>\n" +
+        "            <name locale=\"pt_BR\">PDF</name>\n" +
         "            <seq>0</seq>\n" +
         "            <submission_file_ref id=\"${ref}\" revision=\"${revision}\"/>\n" +
         "          </article_galley>\n";

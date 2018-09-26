@@ -20,6 +20,7 @@ package com.pdf2ojs.view;
 import com.pdf2ojs.model.ArticleMeta;
 import com.pdf2ojs.model.ExportOjs;
 import com.pdf2ojs.model.ExtractPdf;
+import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -47,12 +48,15 @@ public class ExtractorView extends javax.swing.JFrame
     
     public ExtractorView()
     {
+        this.setTitle( "PDF to OJS" );
         initComponents();
         filesTextField.setEditable( false );
         xmlTextField.setEditable( false );
-        progressTextField.setEditable( false );
-        this.setTitle( "PDF to OJS" );
         extractButton.setEnabled( false );
+        extractProgressBar.setForeground( Color.BLUE );
+        extractProgressBar.setStringPainted( true );
+        extractProgressBar.setValue( 0 );
+        sectionsButton.setVisible( false );
     }
 
     private void openFileChooser()
@@ -70,8 +74,9 @@ public class ExtractorView extends javax.swing.JFrame
         {
             papers = file.getSelectedFiles();
             filesTextField.setText( papers.length + " files selected" );
-            progressTextField.setText( "0/" + papers.length );
             extractButton.setEnabled( true );
+            extractProgressBar.setValue( 0 );
+            extractProgressBar.setString( "0%" );
         }
     }
 
@@ -100,7 +105,8 @@ public class ExtractorView extends javax.swing.JFrame
         issueYearTextField.setEditable( enable );
         fileChooserButton.setEnabled( enable );
         fileSaveButton.setEnabled( enable );
-        EditButton.setEnabled( enable );
+        addButton.setEnabled( enable );
+        editButton.setEnabled( enable );
         saveButton.setEnabled( enable );
         extractButton.setEnabled( enable );
     }
@@ -190,7 +196,8 @@ public class ExtractorView extends javax.swing.JFrame
                 filename = paper.getName();
                 metapapers.add( ExtractPdf.extract( userHome, paper ) );
                 progress++;
-                progressTextField.setText( String.valueOf( progress ) + "/" + papers.length );
+                extractProgressBar.setValue( progress * 100 / papers.length );
+                extractProgressBar.setString( String.valueOf( progress * 100 / papers.length ) + "%" );
             }
             catch ( FileNotFoundException e )
             {
@@ -256,6 +263,29 @@ public class ExtractorView extends javax.swing.JFrame
         };
         thread.start();
     }
+    
+    /**private void openSectionsView()
+    {
+        java.awt.EventQueue.invokeLater( new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                parent.setFields( false );
+                final SectionView sectionView = new SectionView( parent );
+                sectionView.addWindowListener( new WindowAdapter()
+                {
+                    @Override
+                    public void windowClosing( WindowEvent e )
+                    {
+                        parent.setFields( true );
+                        sectionView.getSections();
+                    }                    
+                } );
+                sectionView.setVisible( true );
+            }
+        } );
+    }**/
 
     private void openAddView()
     {
@@ -329,11 +359,12 @@ public class ExtractorView extends javax.swing.JFrame
         xmlLabel = new javax.swing.JLabel();
         xmlTextField = new javax.swing.JTextField();
         fileSaveButton = new javax.swing.JButton();
-        EditButton = new javax.swing.JButton();
-        progressTextField = new javax.swing.JTextField();
+        editButton = new javax.swing.JButton();
         progressLabel = new javax.swing.JLabel();
         extractButton = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        addButton = new javax.swing.JButton();
+        sectionsButton = new javax.swing.JButton();
+        extractProgressBar = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -402,16 +433,13 @@ public class ExtractorView extends javax.swing.JFrame
             }
         });
 
-        EditButton.setFont(new java.awt.Font("Lato Heavy", 0, 14)); // NOI18N
-        EditButton.setText("Edit");
-        EditButton.addActionListener(new java.awt.event.ActionListener() {
+        editButton.setFont(new java.awt.Font("Lato Heavy", 0, 14)); // NOI18N
+        editButton.setText("Edit");
+        editButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EditButtonActionPerformed(evt);
+                editButtonActionPerformed(evt);
             }
         });
-
-        progressTextField.setFont(new java.awt.Font("Lato Medium", 0, 14)); // NOI18N
-        progressTextField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
         progressLabel.setFont(new java.awt.Font("Lato Heavy", 0, 14)); // NOI18N
         progressLabel.setText("Progress");
@@ -424,12 +452,21 @@ public class ExtractorView extends javax.swing.JFrame
             }
         });
 
-        jButton1.setText("Add");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        addButton.setText("Add");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addButtonActionPerformed(evt);
             }
         });
+
+        sectionsButton.setText("Sections");
+        sectionsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sectionsButtonActionPerformed(evt);
+            }
+        });
+
+        extractProgressBar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -438,41 +475,39 @@ public class ExtractorView extends javax.swing.JFrame
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(progressLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(251, 251, 251))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(issueTitleLabel)
-                            .addComponent(issueDateLabel)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(filesLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(xmlLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(issueYearLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(xmlTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(filesTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(issueYearTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(issueDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(issueTittelTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(progressTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fileSaveButton)
-                            .addComponent(fileChooserButton)
-                            .addComponent(issueTitleFormatLabel)
-                            .addComponent(issueYearFormatLabel))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(extractButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(EditButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(saveButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                    .addComponent(issueTitleLabel)
+                    .addComponent(issueDateLabel)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(filesLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(xmlLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(issueYearLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(progressLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(xmlTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(filesTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(issueYearTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(issueDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(issueTittelTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(extractProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(fileSaveButton)
+                    .addComponent(fileChooserButton)
+                    .addComponent(issueTitleFormatLabel)
+                    .addComponent(issueYearFormatLabel))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(76, 76, 76)
+                .addComponent(sectionsButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(extractButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(editButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(saveButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(addButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -502,16 +537,17 @@ public class ExtractorView extends javax.swing.JFrame
                     .addComponent(fileSaveButton)
                     .addComponent(xmlLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(progressTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(progressLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(progressLabel)
+                    .addComponent(extractProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
-                    .addComponent(EditButton)
+                    .addComponent(editButton)
                     .addComponent(extractButton)
-                    .addComponent(jButton1))
-                .addContainerGap())
+                    .addComponent(addButton)
+                    .addComponent(sectionsButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -529,9 +565,9 @@ public class ExtractorView extends javax.swing.JFrame
         this.openFileSave();
     }//GEN-LAST:event_fileSaveButtonActionPerformed
 
-    private void EditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditButtonActionPerformed
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
         this.openEditView();
-    }//GEN-LAST:event_EditButtonActionPerformed
+    }//GEN-LAST:event_editButtonActionPerformed
 
     private void issueTittelTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_issueTittelTextFieldActionPerformed
         // TODO add your handling code here:
@@ -545,10 +581,15 @@ public class ExtractorView extends javax.swing.JFrame
         this.openAddView();
     }//GEN-LAST:event_addButtonActionPerformed
 
+    private void sectionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sectionsButtonActionPerformed
+        //this.openSectionsView();
+    }//GEN-LAST:event_sectionsButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton EditButton;
+    private javax.swing.JButton addButton;
+    private javax.swing.JButton editButton;
     private javax.swing.JButton extractButton;
+    private javax.swing.JProgressBar extractProgressBar;
     private javax.swing.JButton fileChooserButton;
     private javax.swing.JButton fileSaveButton;
     private javax.swing.JLabel filesLabel;
@@ -561,10 +602,9 @@ public class ExtractorView extends javax.swing.JFrame
     private javax.swing.JLabel issueYearFormatLabel;
     private javax.swing.JLabel issueYearLabel;
     private javax.swing.JTextField issueYearTextField;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel progressLabel;
-    private javax.swing.JTextField progressTextField;
     private javax.swing.JButton saveButton;
+    private javax.swing.JButton sectionsButton;
     private javax.swing.JLabel xmlLabel;
     private javax.swing.JTextField xmlTextField;
     // End of variables declaration//GEN-END:variables

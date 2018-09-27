@@ -121,7 +121,7 @@ public class ExtractorView extends javax.swing.JFrame
                 {
                     try 
                     {
-                        Runtime.getRuntime().exec( new String[] { "bash", "-c", "gs -o " + userHome + "tmp_" + paper.getName() + " -dNOPAUSE -dSAFER -sDEVICE=pdfwrite -sColorConversionStrategy=Gray -dProcessColorModel=/DeviceGray -f " + paper.getAbsolutePath() } );
+                        Runtime.getRuntime().exec( new String[] { "bash", "-c", "gs -o " + userHome + "tmp_" + paper.getName() + " -dBATCH -dNOPAUSE -dSAFER -sDEVICE=pdfwrite -sColorConversionStrategy=Gray -dProcessColorModel=/DeviceGray -f " + paper.getAbsolutePath() } );
                     }
                     catch ( IOException e )
                     {
@@ -135,7 +135,7 @@ public class ExtractorView extends javax.swing.JFrame
                 {
                     try 
                     {
-                        Runtime.getRuntime().exec( new String[] { "cmd.exe", "/c", "C:/gswin64c -sOutputFile=" + userHome + "tmp_" + paper.getName() + " -dNOPAUSE -dSAFER -sDEVICE=pdfwrite -sColorConversionStrategy=Gray -dProcessColorModel=/DeviceGray -f " + paper.getAbsolutePath() } );
+                        Runtime.getRuntime().exec( new String[] { "cmd.exe", "/c", "C:/gswin64c -sOutputFile=" + userHome + "tmp_" + paper.getName() + " -dBATCH -dNOPAUSE -dSAFER -sDEVICE=pdfwrite -sColorConversionStrategy=Gray -dProcessColorModel=/DeviceGray -f " + paper.getAbsolutePath() } );
                     }
                     catch ( IOException e )
                     {

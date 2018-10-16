@@ -81,8 +81,6 @@ public class ExportOjs
         "        <article xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" locale=\"pt_BR\" date_submitted=\"${articleDateSubmitted}\" stage=\"production\" date_published=\"${articleDatePublished}\" section_ref=\"${sectionAbbreviation}\" seq=\"1\" access_status=\"0\">\n" +
         "          <id type=\"internal\" advice=\"ignore\">${articleID}</id>\n" +
         "          <title locale=\"pt_BR\">${articleTitle}</title>\n" +
-        "          <fpage>${firstPage}</fpage>\n" +
-        "          <lpage>${lastPage}</lpage>\n" +
         "          <abstract locale=\"pt_BR\">${articleAbstract}</abstract>\n";
     
     private final String OJS_XML_ISSUE_AUTHORS = 
@@ -130,6 +128,9 @@ public class ExportOjs
         "            <submission_file_ref id=\"${ref}\" revision=\"${revision}\"/>\n" +
         "          </article_galley>\n";
     
+    private final String OJS_XML_PAGES = 
+        "          <pages>${firstPage} - ${lastPage}</pages>\n";
+
     private final String OJS_XML_ISSUE_END_ARTICLE = 
         "        </article>\n";
 
@@ -240,9 +241,7 @@ public class ExportOjs
             strArticle = strArticle.replace( OJS_ARTICLE_ID, String.valueOf( articleId ) );
             strArticle = strArticle.replace( OJS_ARTICLE_DATE_SUBMITTED, this.issueDate );
             strArticle = strArticle.replace( OJS_ARTICLE_DATE_PUBLISHED, this.issueDate );
-            strArticle = strArticle.replace( OJS_ARTICLE_TITLE, am.getTitle() );
-            strArticle = strArticle.replace( OJS_ARTICLE_FIRST_PAGE, String.valueOf( firstPage ) );
-            strArticle = strArticle.replace( OJS_ARTICLE_LAST_PAGE, String.valueOf( lastPage ) );
+            strArticle = strArticle.replace( OJS_ARTICLE_TITLE, am.getTitle() );            
             strArticle = strArticle.replace( OJS_ARTICLE_ABSTRACT, am.getAbstractText() );
             strArticle = strArticle.replace( OJS_SECTION_ABBREVIATION, sectionAbbreviation );
                
@@ -307,7 +306,11 @@ public class ExportOjs
             }
             
             strAuthors = OJS_XML_ISSUE_AUTHORS + strAuthors + OJS_XML_ISSUE_END_AUTHORS;
-            contentXml += strArticle + strAuthors + strSubmission + strGalley + OJS_XML_ISSUE_END_ARTICLE + "\n";
+            String numberPages = OJS_XML_PAGES;
+            numberPages = numberPages.replace( OJS_ARTICLE_FIRST_PAGE, String.valueOf( firstPage ) );
+            numberPages = numberPages.replace( OJS_ARTICLE_LAST_PAGE, String.valueOf( lastPage ) );
+                    
+            contentXml += strArticle + strAuthors + strSubmission + strGalley + numberPages + OJS_XML_ISSUE_END_ARTICLE + "\n";
         }
         
         sectionXml += OJS_XML_END_SECTION;

@@ -94,6 +94,7 @@ public class ExtractPdf
         List<ArticleMeta.ContributorMeta> index = new ArrayList<ArticleMeta.ContributorMeta>();
         
         InputStream inputStream = new FileInputStream( userHome + "tmp_" + paper.getName() );
+        System.out.println(inputStream);
         extractor.setPDF( inputStream );
         Element result = extractor.getContentAsNLM();
         Document doc = new Document( result );
@@ -104,6 +105,7 @@ public class ExtractPdf
         articleMeta.setAbstractText( getSbcAbstract( articleMeta.getAbstractText() ) );
         articleMeta.setAbstractText( replaceString( articleMeta.getAbstractText() ) );
         articleMeta.setTitle( replaceString( articleMeta.getTitle() ) );
+        articleMeta.setReferences(articleMeta.getReferences());
 
         if ( articleMeta.getAuthors().size() > 10 )
         {

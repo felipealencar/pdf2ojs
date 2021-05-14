@@ -31,7 +31,9 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Iterator;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.hibernate.jpa.criteria.expression.function.UpperFunction;
 
 /**
  *
@@ -250,12 +252,34 @@ public class ExportOjs
             strSubmission = strSubmission.replace( OJS_DATE_UPLOADE, this.issueDate );
             strSubmission = strSubmission.replace( OJS_DATE_MODIFIED, this.issueDate );
             strSubmission = strSubmission.replace( OJS_FILE_SIZE, String.valueOf( am.getPdf().length() ) );
-            strSubmission = strSubmission.replace( OJS_EMBED, Base64.encodeBase64String( Files.readAllBytes( Paths.get( am.getPdf().getAbsolutePath() ) ) ) );
+            //strSubmission = strSubmission.replace( OJS_EMBED, Base64.encodeBase64String( Files.readAllBytes( Paths.get( am.getPdf().getAbsolutePath() ) ) ) );
             strSubmission = strSubmission.replace( OJS_SUBMISSION_ID, String.valueOf( articleId ) );
 
             strGalley = strGalley.replace( OJS_ARTICLE_GALLEY_ID, String.valueOf( articleId ) );
             strGalley = strGalley.replace( OJS_ARTICLE_GALLEY_REVISION, String.valueOf( articleId ) );
-            strGalley = strGalley.replace( OJS_ARTICLE_REF, String.valueOf( articleId ) );
+            List<ArticleMeta> references = am.getReferences();
+            String strReferences = "";
+            strReferences += am.getPdf().getName()+";";
+            for(ArticleMeta reference: references)
+            {
+                List<ContributorMeta> referenceAuthors = reference.getAuthors();
+                String strReferenceAuthors = "";
+                for (Iterator<ContributorMeta> i = referenceAuthors.iterator(); i.hasNext();) 
+                {
+                    ContributorMeta referenceAuthor = i.next();
+                    strReferenceAuthors += referenceAuthor.getName();          
+                    if (!i.hasNext())
+                    {
+                        strReferenceAuthors += ".";
+                    }
+                    else
+                    {
+                        strReferenceAuthors += ";";
+                    }
+                }
+                strReferences += strReferenceAuthors+" "+reference.getTitle()+". "+reference.getJournalTitle()+". "+reference.getPubDate()+"--";
+            }
+            strGalley = strGalley.replace( OJS_ARTICLE_REF, strReferences );
 
             if ( am.getAuthors().size() < 1 )
             {
@@ -311,11 +335,11 @@ public class ExportOjs
             numberPages = numberPages.replace( OJS_ARTICLE_LAST_PAGE, String.valueOf( lastPage ) );
                     
             contentXml += strArticle + strAuthors + strSubmission + strGalley + numberPages + OJS_XML_ISSUE_END_ARTICLE + "\n";
+            
         }
         
         sectionXml += OJS_XML_END_SECTION;
         resultXml += sectionXml + OJS_XML_ISSUE_ARTICLES + contentXml + OJS_XML_END_FILE;
-        
         Writer writer = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( xmlPath ), "utf-8" ) );
         writer.write( resultXml );
         writer.close();

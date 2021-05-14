@@ -23,9 +23,11 @@ import com.pdf2ojs.model.ExtractPdf;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +42,7 @@ import pl.edu.icm.cermine.exception.AnalysisException;
 public class ExtractorView extends javax.swing.JFrame
 {
     private String system = System.getProperty( "os.name" );
-    private String userHome = System.getProperty( "user.home" ) + "/";
+    private String userHome = System.getProperty( "user.home" ) + "\\";
     private File[] papers;
     private String xmlPath;
     private ExtractorView parent = this;
@@ -135,9 +137,33 @@ public class ExtractorView extends javax.swing.JFrame
                 {
                     try 
                     {
-                        Runtime.getRuntime().exec( new String[] { "cmd.exe", "/c", "C:/gswin64c -sOutputFile=" + userHome + "tmp_" + paper.getName() + " -dBATCH -dNOPAUSE -dSAFER -sDEVICE=pdfwrite -sColorConversionStrategy=Gray -dProcessColorModel=/DeviceGray -f " + paper.getAbsolutePath() } );
+                        System.out.println(userHome + paper.getName() + paper.getAbsolutePath());
+                        ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", "gswin64c -sOutputFile=" + userHome + "tmp_" + paper.getName() + " -dBATCH -dNOPAUSE -dSAFER -sDEVICE=pdfwrite -sColorConversionStrategy=Gray -dProcessColorModel=/DeviceGray -f " + paper.getAbsolutePath());
+                        builder.redirectErrorStream(true);
+                        Process p = builder.start();
+                        BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                        String line;
+                        while (true) {
+                            line = r.readLine();
+                            if (line == null) { break; }
+                            System.out.println(line);
+                        }
+                        //Process exec = Runtime.getRuntime().exec( new String[] { "cmd.exe", "/c", "gswin64c -sOutputFile=" + userHome + "tmp_" + paper.getName() + " -dBATCH -dNOPAUSE -dSAFER -sDEVICE=pdfwrite -sColorConversionStrategy=Gray -dProcessColorModel=/DeviceGray -f " + paper.getAbsolutePath() } );
+                        //gswin64c -sOutputFile=C:\Users\Felipe\tmp_aceleracaopromocao.pdf -dBATCH -dNOPAUSE -dSAFER -sDEVICE=pdfwrite -sColorConversionStrategy=Gray -dProcessColorModel=/DeviceGray -f C:\Users\Felipe\OneDrive\Documentos\aceleracaopromocao.pdf                        
                     }
                     catch ( IOException e )
+                    {
+                        JOptionPane.showMessageDialog( null, "Error in generation of " + paper.getName() + " temp file", "ERROR", JOptionPane.ERROR_MESSAGE );
+                    }
+                    catch ( SecurityException e )
+                    {
+                        JOptionPane.showMessageDialog( null, "Error in generation of " + paper.getName() + " temp file", "ERROR", JOptionPane.ERROR_MESSAGE );
+                    }
+                    catch ( NullPointerException e )
+                    {
+                        JOptionPane.showMessageDialog( null, "Error in generation of " + paper.getName() + " temp file", "ERROR", JOptionPane.ERROR_MESSAGE );
+                    }
+                    catch (IndexOutOfBoundsException e )
                     {
                         JOptionPane.showMessageDialog( null, "Error in generation of " + paper.getName() + " temp file", "ERROR", JOptionPane.ERROR_MESSAGE );
                     }

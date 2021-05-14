@@ -16,7 +16,7 @@
         <repository>
             <id>icm</id>
             <name>ICM repository</name>
-            <url>http://maven.icm.edu.pl/artifactory/repo</url>
+            <url>https://maven.ceon.pl/artifactory/repo</url>
         </repository>
         <repository>
             <id>spring-snapshots</id>
@@ -42,7 +42,7 @@
             <name>Spring Snapshots</name>
             <url>https://repo.spring.io/snapshot</url>
             <snapshots>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </snapshots>
         </pluginRepository>
         <pluginRepository>
@@ -63,9 +63,10 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>pl.edu.icm.cermine</groupId>
-            <artifactId>cermine-impl</artifactId>
-        </dependency>
+			<groupId>pl.edu.icm.cermine</groupId>
+			<artifactId>cermine-impl</artifactId>
+			<version>1.13</version>
+		</dependency>
         <dependency>
             <groupId>pl.edu.icm.synat</groupId>
             <artifactId>synat-business-services-impl</artifactId>
@@ -83,13 +84,11 @@
             <dependency>
                 <groupId>pl.edu.icm.cermine</groupId>
                 <artifactId>cermine-impl</artifactId>
-                <version>1.14-SNAPSHOT</version>
+                <version>1.13</version>
                 <type>jar</type>
             </dependency>
         </dependencies>
     </dependencyManagement>
-    
-    
     <build>
     <plugins>
     <plugin>
